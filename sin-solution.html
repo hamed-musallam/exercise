@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <style>
+        html,
+        body,
+        div {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="sine_wave">
+
+        <svg width="1000" height="1000">
+            <line x1="100" y1="0" x2="100" y2="200" style="stroke:red;stroke-width:2" />
+            <line x1="0" y1="100" x2="600" y2="100" style="stroke:blue;stroke-width:2" />
+        </svg>
+
+    </div>
+</body>
+
+</html>
+<script>
+
+    const PI = 3.14159265358979323846;
+
+    function factorial(x) {
+        if (x < 0 || typeof x != 'number') return;
+        if (x <= 1) return 1;
+        return x * factorial(x - 1);
+    }
+
+    function power(x, n) {
+        if (typeof x != 'number' || typeof n != 'number') return;
+        if (n == 0) return 1;
+        return x * power(x, n - 1);
+    }
+
+
+    function sin(x) {
+
+        // x = x * (PI / 180);
+        var sin = 0;
+        var n = 1;
+        for (var i = 0; i <= 360; i++) {
+            var member = power(x, n) / factorial(n) - power(x, n + 2) / factorial(n + 2);
+            if (isNaN(member))
+                break;
+            sin += member;
+            n += 4;
+        }
+
+        console.log(Math.sin(x) + " math.sin");
+        console.log(sin + " My function");
+
+        return sin;
+
+    }
+    
+    function toRadians(angle) {
+        return angle * (PI / 180);
+    }
+
+    function toDegrees(angle) {
+        return angle * (180 / PI);
+    }
+
+
+    (function () {
+
+        // sin(250);
+
+        var svg = document.getElementById('sine_wave').children[0];
+        var origin = { //origin of axes
+            x: 100,
+            y: 100
+        };
+        var amplitude = 10; // wave amplitude
+        var rarity = 1; // point spacing
+        var freq = 0.1; // angular frequency
+        var phase = 0; // phase angle
+
+        for (var i = 0; i < 360; i++) {
+            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+            line.setAttribute('x1', (i - 1) * rarity + origin.x);
+            line.setAttribute('y1', sin(freq * (i - 1 + phase)) * amplitude + origin.y);
+
+            line.setAttribute('x2', i * rarity + origin.x);
+            line.setAttribute('y2', sin(freq * (i + phase)) * amplitude + origin.y);
+
+            line.setAttribute('style', "stroke:black;stroke-width:2");
+
+            svg.appendChild(line);
+        }
+
+    })();
+
+</script>
